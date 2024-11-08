@@ -5,6 +5,11 @@ export async function DiscordRequest(endpoint, options) {
   const url = 'https://discord.com/api/v10/' + endpoint;
   // Stringify payloads
   if (options.body) options.body = JSON.stringify(options.body);
+  
+  console.log('Request URL:', url);
+  console.log('Request Options:', JSON.stringify(options, null, 2));
+  console.log('DISCORD_TOKEN (first 10 chars):', process.env.DISCORD_TOKEN.substring(0, 10) + '...');
+
   // Use fetch to make requests
   const res = await fetch(url, {
     headers: {
@@ -15,9 +20,11 @@ export async function DiscordRequest(endpoint, options) {
     ...options
   });
   // throw API errors
+  console.log('Response Status:', res.status);
+  
   if (!res.ok) {
     const data = await res.json();
-    console.log(res.status);
+    console.log('Response Data:', JSON.stringify(data, null, 2));
     throw new Error(JSON.stringify(data));
   }
   // return original response
